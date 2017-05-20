@@ -1,7 +1,23 @@
 $def with (form, title)
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>$title</title></head>
 <body>
-	<form class="form" method="post"> 
+	<form class="form" method="post" id="userForm"> 
 		$:form.render()
 	</form>
+	<script>
+	(function (doc, undefined) {
+		const xhr = new XMLHttpRequest();
+		const userFormElement = doc.querySelector("#userForm");
+		
+		doc.querySelector("#toggleCtrl").onchange = post;
+
+		function post () {
+			const formData = new FormData(userFormElement);
+			xhr.open("POST", "/", true);
+			xhr.onload = console.info;
+			xhr.onerror = console.error;
+			xhr.send(formData);
+		}
+	})(document);
+	</script>
 </body></html>

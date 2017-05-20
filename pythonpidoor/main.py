@@ -3,7 +3,7 @@ import RPi.GPIO as GPIO
 from web import form
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(7, GPIO.OUT)
+GPIO.setup(29, GPIO.OUT)
 
 #Defining the index page
 urls = ('/', 'index')
@@ -17,8 +17,7 @@ app = web.application(urls, globals())
 	class_: is HTML class
 	"""
 my_form = form.Form(
- form.Button("btn", id="btnR", value=True, html="on", class_="on"),
- form.Button("btn", id="btnG", value=False, html="off", class_="off")
+ form.Checkbox("toggleCtrl", id="toggleCtrl", value="YES", class_="on"),
 )
 # Above, we actually need a toggle (or checkbox), not a button
 # This would read its value from a file, and write to the same file
@@ -28,24 +27,23 @@ class index:
     # rendering the HTML page
     def GET(self):
         form = my_form()
-		title = "Python Pi Garage Door"
+	title = "Python Pi Garage Door"
+
         return render.index(form, title)
 
     # posting the data from the webpage to Pi
     def POST(self):
         # get the data submitted from the web form
-        userData = web.input()
-		GPIO.output(7, userData.btn)
+        form_data = web.input()
+	
+	if form_data.has_key("toggleCtrl"):
+		GPIO.output(29, False)
+		print "Open"
+
+	elif !form_data.has_key("toggleCtrl"):
+		GPIO.output(29, True)
+		print "Close"
 		
-		print ""
-		
-        #if userData.btn == "on":
-         #   GPIO.output(7,True) #Turn on the LED
-          #  print "LED is ON"   #prints the status in Pi's Terminal
-        #elif userData.btn == "off":
-         #   GPIO.output(7,False) #Turn of the LED
-          #  print "LED is OFF" #prints the status in Pi's Terminal
-			
         raise web.seeother('/')
 # run
 if __name__ == '__main__':
